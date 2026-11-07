@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SustentUp - Programa Governamental de Sustentabilidade</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+  <div class="mobile-frame">
+    
+    <!-- Toast de Notificação -->
+    <div id="toast" class="toast hidden">
+      <i id="toast-icon" class="ph-bold ph-check-circle"></i>
+      <span id="toast-msg">Notificação</span>
+    </div>
+
+    <!-- Modal Trilha de Níveis -->
+    <div id="modal-levels" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3><i class="ph-bold ph-trophy"></i> Trilha de Níveis</h3>
+          <button id="btn-close-modal" class="btn-close">&times;</button>
+        </div>
+        <p class="modal-desc">Acumule XP total para desbloquear novos títulos governamentais.</p>
+        <div class="levels-list" id="levels-list">
+          <!-- Renderizado via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="govt-badge">
+        <i class="ph-bold ph-shield-check"></i>
+        <span>Gov. Sustentável</span>
+      </div>
+      <div class="logo-container">
+        <i class="ph-bold ph-leaf logo-icon"></i>
+        <h1 class="logo-title">Sustent<span>Up</span></h1>
+      </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="app-content">
+
+      <!-- TELA 0: LOGIN / CADASTRO -->
+      <section id="screen-auth" class="tab-screen active">
+        <div class="auth-card">
+          <div class="auth-header">
+            <i class="ph-bold ph-user-plus auth-icon"></i>
+            <h2 id="auth-title">Acesse sua Conta</h2>
+            <p id="auth-subtitle">Entre para transformar sua escola e acumular pontos.</p>
+          </div>
+
+          <button type="button" id="btn-demo-login" class="btn-demo">
+            <i class="ph-bold ph-lightning"></i> Entrar com Conta Demo
+          </button>
+
+          <div class="auth-divider">
+            <span>ou preencha os dados</span>
+          </div>
+
+          <form id="auth-form">
+            <div class="form-group hidden" id="group-name">
+              <label for="auth-name">Nome Completo</label>
+              <input type="text" id="auth-name" placeholder="Ex: Alex Silva">
+            </div>
+
+            <div class="form-group">
+              <label for="auth-email">E-mail Estudantil / RA</label>
+              <input type="email" id="auth-email" placeholder="estudante@escola.gov.br" required>
+            </div>
+
+            <div class="form-group">
+              <label for="auth-password">Senha</label>
+              <input type="password" id="auth-password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" id="btn-auth-submit" class="btn-primary">
+              <i class="ph-bold ph-sign-in"></i> Entrar
+            </button>
+          </form>
+
+          <div class="auth-toggle">
+            <span id="toggle-text">Não tem uma conta?</span>
+            <button type="button" id="btn-toggle-auth">Cadastre-se</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TELA 1: DASHBOARD -->
+      <section id="screen-dashboard" class="tab-screen">
+        <div class="welcome-card">
+          <span class="user-greeting">Olá, <strong id="dash-user-name">Estudante</strong>! 👋</span>
+          <h2>Sua contribuição transforma a cidade.</h2>
+        </div>
+
+        <div class="points-banner">
+          <div class="points-info">
+            <span class="label">Saldo Atual</span>
+            <div class="points-value">
+              <i class="ph-bold ph-coins"></i>
+              <span id="total-points-dash">250</span> <small>pts</small>
+            </div>
+          </div>
+          <div class="points-badge" id="level-badge">Nível 2</div>
+        </div>
+
+        <!-- Barra de Progresso de Nível -->
+        <div class="level-progress-card">
+          <div class="progress-labels">
+            <span id="progress-title">Progresso de Nível</span>
+            <span id="progress-pts">250 / 500 XP</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-fill" style="width: 50%;"></div>
+          </div>
+          <button type="button" id="btn-open-levels" class="btn-link-levels">
+            <i class="ph-bold ph-trophy"></i> Ver Trilha de Níveis <i class="ph-bold ph-caret-right"></i>
+          </button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <i class="ph-bold ph-tree-evergreen"></i>
+            <strong id="stat-tasks">5</strong>
+            <span>Tarefas Feitas</span>
+          </div>
+          <div class="stat-card">
+            <i class="ph-bold ph-barbell"></i>
+            <strong id="stat-co2">12.5 kg</strong>
+            <span>CO₂ Evitado</span>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <h3>Tarefas Disponíveis</h3>
+        </div>
+        <div class="task-list" id="task-list"></div>
+      </section>
+
+      <!-- TELA 2: REGISTRO DE AÇÕES -->
+      <section id="screen-registro" class="tab-screen">
+        <div class="screen-header">
+          <h2>Registrar Ação</h2>
+          <p>Envie sua atividade sustentável e acumule pontos.</p>
+        </div>
+
+        <div class="simulator-card">
+          <h3><i class="ph-bold ph-calculator"></i> Simulador de Pontos</h3>
+          <div class="form-group">
+            <label for="sim-category">Tipo de Ação:</label>
+            <select id="sim-category">
+              <option value="100">Reciclagem de Plástico/Vidro (+100 pts/kg)</option>
+              <option value="150">Plantio de Mudas (+150 pts/un)</option>
+              <option value="80">Descarte Consciente de Eletrônicos (+80 pts/un)</option>
+              <option value="50">Voluntariado em Mutirão (+50 pts/hora)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="sim-amount">Quantidade / Horas:</label>
+            <input type="number" id="sim-amount" value="1" min="1" max="50">
+          </div>
+          <div class="simulation-result">
+            <span>Pontos Estimados:</span>
+            <strong id="sim-total-preview">+100 pts</strong>
+          </div>
+        </div>
+
+        <form id="action-form" class="action-form">
+          <div class="form-group">
+            <label for="action-title">Título da Ação Realizada</label>
+            <input type="text" id="action-title" placeholder="Ex: Entreguei 2kg de PET na escola" required>
+          </div>
+          <div class="form-group">
+            <label for="action-proof">Comprovante / Foto (Simulado)</label>
+            <input type="file" id="action-proof" accept="image/*">
+          </div>
+          <button type="submit" class="btn-primary">
+            <i class="ph-bold ph-paper-plane-tilt"></i> Enviar Ação
+          </button>
+        </form>
+      </section>
+
+      <!-- TELA 3: PERFIL E LOJINHA -->
+      <section id="screen-perfil" class="tab-screen">
+        <div class="profile-card">
+          <div class="avatar">
+            <i class="ph-bold ph-user-circle"></i>
+          </div>
+          <h3 id="profile-user-name">Alex Silva</h3>
+          <p class="school-name">Escola Est. Profª Rosa Cristina</p>
+          <div class="wallet-badge">
+            <i class="ph-bold ph-coins"></i> <span id="total-points-profile">250</span> Pontos Disponíveis
+          </div>
+          
+          <button type="button" id="btn-logout" class="btn-logout">
+            <i class="ph-bold ph-sign-out"></i> Sair da Conta
+          </button>
+        </div>
+
+        <div class="section-title">
+          <h3><i class="ph-bold ph-storefront"></i> Lojinha de Recompensas</h3>
+        </div>
+
+        <div class="rewards-grid" id="rewards-grid"></div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Tab Bar -->
+    <nav class="bottom-nav hidden" id="main-nav">
+      <button class="nav-btn active" data-target="screen-dashboard">
+        <i class="ph-bold ph-house-line"></i>
+        <span>Início</span>
+      </button>
+      <button class="nav-btn" data-target="screen-registro">
+        <i class="ph-bold ph-plus-circle"></i>
+        <span>Registrar</span>
+      </button>
+      <button class="nav-btn" data-target="screen-perfil">
+        <i class="ph-bold ph-gift"></i>
+        <span>Lojinha</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
